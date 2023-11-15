@@ -10,11 +10,23 @@ const userRegister = catchAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Contact added successfully',
+    message: 'User register successfully',
+    data: result,
+  });
+});
+
+const userLogin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.userLogin(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User login successfully',
     data: result,
   });
 });
 
 export const UserController = {
   userRegister,
+  userLogin
 };
