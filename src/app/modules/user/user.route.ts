@@ -7,4 +7,6 @@ router.post('/register', UserController.userRegister);
 
 router.post('/login', UserController.userLogin);
 
+router.get('/:email', UserController.getUserByEmail);
+
 export const UserRoutes = router;

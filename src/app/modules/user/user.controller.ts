@@ -26,7 +26,21 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
+  const email = req.params.email;
+
+  const result = await UserService.getUserByEmail(email);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User found',
+    data: result,
+  });
+})
+
 export const UserController = {
   userRegister,
-  userLogin
+  userLogin,
+  getUserByEmail
 };

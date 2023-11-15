@@ -50,7 +50,22 @@ const userLogin = async (data: Partial<User>): Promise<User> => {
   return user;
 };
 
+const getUserByEmail = async (email: string): Promise<User | null> => {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User not found');
+  }
+
+  return user;
+}
+
 export const UserService = {
   userRegister,
   userLogin,
+  getUserByEmail
 };
