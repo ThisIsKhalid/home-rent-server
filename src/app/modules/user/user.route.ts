@@ -11,4 +11,6 @@ router.get('/:email', UserController.getUserByEmail);
 
 router.post('/github', UserController.githubLogin);
 
+router.post('/google', UserController.googleLogin);
+
 export const UserRoutes = router;

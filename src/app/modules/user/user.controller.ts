@@ -37,6 +37,17 @@ const githubLogin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const googleLogin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.googleLogin(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User login successfully',
+    data: result,
+  });
+});
+
 const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
   const email = req.params.email;
 
@@ -48,11 +59,12 @@ const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
     message: 'User found',
     data: result,
   });
-})
+});
 
 export const UserController = {
   userRegister,
   userLogin,
   getUserByEmail,
   githubLogin,
+  googleLogin
 };
