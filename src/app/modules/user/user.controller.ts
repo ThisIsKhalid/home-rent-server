@@ -26,6 +26,17 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const githubLogin = catchAsync(async (req: Request, res: Response) => {
+  const result = await UserService.githubLogin(req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User login successfully',
+    data: result,
+  });
+});
+
 const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
   const email = req.params.email;
 
@@ -42,5 +53,6 @@ const getUserByEmail = catchAsync(async (req: Request, res: Response) => {
 export const UserController = {
   userRegister,
   userLogin,
-  getUserByEmail
+  getUserByEmail,
+  githubLogin,
 };

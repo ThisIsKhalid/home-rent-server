@@ -50,6 +50,31 @@ const userLogin = async (data: Partial<User>): Promise<User> => {
   return user;
 };
 
+const githubLogin = async (data: Partial<User>): Promise<User> => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const { id, ...userData } = data;
+
+  if (!userData.email) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Please provide email');
+  }
+
+  const user = await prisma.user.findUnique({
+    where: {
+      email: userData.email,
+    },
+  });
+
+  if (user) {
+    return user;
+  }
+
+  const response = await prisma.user.create({
+    data: userData,
+  });
+
+  return response;
+};
+
 const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await prisma.user.findUnique({
     where: {
@@ -62,10 +87,11 @@ const getUserByEmail = async (email: string): Promise<User | null> => {
   }
 
   return user;
-}
+};
 
 export const UserService = {
   userRegister,
   userLogin,
-  getUserByEmail
+  getUserByEmail,
+  githubLogin,
 };
