@@ -66,5 +66,5 @@ export const UserController = {
   userLogin,
   getUserByEmail,
   githubLogin,
-  googleLogin
+  googleLogin,
 };
