@@ -8,5 +8,7 @@ const express_1 = __importDefault(require("express"));
 const house_controller_1 = require("./house.controller");
 const router = express_1.default.Router();
 router.post('/add-house', house_controller_1.HouseController.addHouse);
+router.post('/favorites/:userId/:houseId', house_controller_1.HouseController.addFavorite);
+router.delete('/favorites/:userId/:houseId', house_controller_1.HouseController.deleteFavorite);
 router.get('/', house_controller_1.HouseController.getHouses);
 exports.HouseRoutes = router;

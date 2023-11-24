@@ -1,4 +1,6 @@
 import { House } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { IListingsParams } from './house.interface';
 
@@ -85,7 +87,73 @@ const getHouses = async (params: IListingsParams) => {
   return houses;
 };
 
+const addFavorite = async (userId: string, houseId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (!houseId || typeof houseId !== 'string') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid house id');
+  }
+
+  const favoriteIds = [...(user.favoriteIds || [])];
+
+  favoriteIds.push(houseId);
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      favoriteIds,
+    },
+  });
+  // console.log(result, 'add');
+
+  return result;
+};
+
+const deleteFavorite = async (userId: string, houseId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  if (!houseId || typeof houseId !== 'string') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid house id');
+  }
+
+  let favoriteIds = [...(user.favoriteIds || [])];
+
+  favoriteIds = favoriteIds.filter(id => id !== houseId);
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      favoriteIds,
+    },
+  });
+  // console.log(result);
+
+  return result;
+};
+
 export const HouseService = {
   addHouse,
   getHouses,
+  addFavorite,
+  deleteFavorite,
 };

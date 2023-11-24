@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.HouseService = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const addHouse = (house) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.house.create({
@@ -75,7 +77,59 @@ const getHouses = (params) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(houses);
     return houses;
 });
+const addFavorite = (userId, houseId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (!user) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    if (!houseId || typeof houseId !== 'string') {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid house id');
+    }
+    const favoriteIds = [...(user.favoriteIds || [])];
+    favoriteIds.push(houseId);
+    const result = yield prisma_1.default.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            favoriteIds,
+        },
+    });
+    // console.log(result, 'add');
+    return result;
+});
+const deleteFavorite = (userId, houseId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (!user) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    if (!houseId || typeof houseId !== 'string') {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid house id');
+    }
+    let favoriteIds = [...(user.favoriteIds || [])];
+    favoriteIds = favoriteIds.filter(id => id !== houseId);
+    const result = yield prisma_1.default.user.update({
+        where: {
+            id: userId,
+        },
+        data: {
+            favoriteIds,
+        },
+    });
+    // console.log(result);
+    return result;
+});
 exports.HouseService = {
     addHouse,
     getHouses,
+    addFavorite,
+    deleteFavorite,
 };

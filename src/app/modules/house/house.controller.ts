@@ -27,7 +27,37 @@ const getHouses = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const addFavorite = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const houseId = req.params.houseId;
+ 
+  const result = await HouseService.addFavorite(userId, houseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Favorite house added successfully',
+    data: result,
+  });
+});
+
+const deleteFavorite = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const houseId = req.params.houseId;
+
+  const result = await HouseService.deleteFavorite(userId, houseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Favorite house deleted successfully',
+    data: result,
+  });
+});
+
 export const HouseController = {
   addHouse,
   getHouses,
+  addFavorite,
+  deleteFavorite,
 };

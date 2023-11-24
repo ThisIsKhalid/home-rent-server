@@ -36,7 +36,31 @@ const getHouses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
         data: result,
     });
 }));
+const addFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const houseId = req.params.houseId;
+    const result = yield house_service_1.HouseService.addFavorite(userId, houseId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Favorite house added successfully',
+        data: result,
+    });
+}));
+const deleteFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const houseId = req.params.houseId;
+    const result = yield house_service_1.HouseService.deleteFavorite(userId, houseId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Favorite house deleted successfully',
+        data: result,
+    });
+}));
 exports.HouseController = {
     addHouse,
     getHouses,
+    addFavorite,
+    deleteFavorite,
 };
