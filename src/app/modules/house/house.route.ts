@@ -9,6 +9,8 @@ router.post('/favorites/:userId/:houseId', HouseController.addFavorite);
 
 router.delete('/favorites/:userId/:houseId', HouseController.deleteFavorite);
 
+router.get('/:houseId', HouseController.getHouseById);
+
 router.get('/', HouseController.getHouses);
 
 export const HouseRoutes = router;

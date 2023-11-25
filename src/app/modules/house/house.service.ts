@@ -4,7 +4,7 @@ import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { IListingsParams } from './house.interface';
 
-const addHouse = async (house: House) => {
+const addHouse = async (house: House): Promise<House> => {
   const result = await prisma.house.create({
     data: house,
   });
@@ -12,7 +12,7 @@ const addHouse = async (house: House) => {
   return result;
 };
 
-const getHouses = async (params: IListingsParams) => {
+const getHouses = async (params: IListingsParams): Promise<House[]> => {
   const {
     userId,
     roomCount,
@@ -87,6 +87,23 @@ const getHouses = async (params: IListingsParams) => {
   return houses;
 };
 
+const getHouseById = async (id: string): Promise<House> => {
+  const house = await prisma.house.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+    }
+  });
+
+  if (!house) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'House not found');
+  }
+
+  return house;
+}
+
 const addFavorite = async (userId: string, houseId: string) => {
   const user = await prisma.user.findUnique({
     where: {
@@ -156,4 +173,5 @@ export const HouseService = {
   getHouses,
   addFavorite,
   deleteFavorite,
+  getHouseById,
 };

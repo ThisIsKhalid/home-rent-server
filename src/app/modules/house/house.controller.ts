@@ -27,10 +27,22 @@ const getHouses = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getHouseById = catchAsync(async (req: Request, res: Response) => {
+  const houseId = req.params.houseId;
+  const result = await HouseService.getHouseById(houseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'House fetched successfully',
+    data: result,
+  });
+});
+
 const addFavorite = catchAsync(async (req: Request, res: Response) => {
   const userId = req.params.userId;
   const houseId = req.params.houseId;
- 
+
   const result = await HouseService.addFavorite(userId, houseId);
 
   sendResponse(res, {
@@ -60,4 +72,5 @@ export const HouseController = {
   getHouses,
   addFavorite,
   deleteFavorite,
+  getHouseById,
 };
