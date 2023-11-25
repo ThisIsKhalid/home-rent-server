@@ -15,6 +15,20 @@ const addHouse = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteHouse = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+  const houseId = req.params.houseId;
+
+  const result = await HouseService.deleteHouse(userId, houseId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'House deleted successfully',
+    data: result,
+  });
+});
+
 const getHouses = catchAsync(async (req: Request, res: Response) => {
   const params = req.query;
   const result = await HouseService.getHouses(params);
@@ -87,4 +101,5 @@ export const HouseController = {
   deleteFavorite,
   getHouseById,
   getFavoriteHouses,
+  deleteHouse,
 };

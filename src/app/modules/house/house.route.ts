@@ -5,6 +5,8 @@ const router = express.Router();
 
 router.post('/add-house', HouseController.addHouse);
 
+router.delete('/delete-house/:userId/:houseId', HouseController.deleteHouse);
+
 router.post('/favorites/:userId/:houseId', HouseController.addFavorite);
 
 router.get('/favorites/:userId', HouseController.getFavoriteHouses);

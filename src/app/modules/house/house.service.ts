@@ -12,6 +12,32 @@ const addHouse = async (house: House): Promise<House> => {
   return result;
 };
 
+const deleteHouse = async (userId: string, houseId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized to delete this house ');
+  }
+
+  if (!houseId || typeof houseId !== 'string') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid house id');
+  }
+
+  const result = await prisma.house.deleteMany({
+    where: {
+      id: houseId,
+      userId,
+    },
+  });
+  // console.log(result);
+
+  return result;
+};
+
 const getHouses = async (params: IListingsParams): Promise<House[]> => {
   const {
     userId,
@@ -197,4 +223,5 @@ export const HouseService = {
   deleteFavorite,
   getHouseById,
   getFavoriteHouses,
+  deleteHouse,
 };
