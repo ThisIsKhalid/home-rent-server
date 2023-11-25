@@ -16,7 +16,6 @@ const addReservation = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getReservations = catchAsync(async (req: Request, res: Response) => {
-
   const result = await ReservationService.getReservations(req.query);
 
   sendResponse(res, {
@@ -27,7 +26,24 @@ const getReservations = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteReservation = catchAsync(async (req: Request, res: Response) => {
+  const { userId, reservationId } = req.params;
+
+  const result = await ReservationService.deleteReservation(
+    userId,
+    reservationId
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reservation deleted successfully',
+    data: result,
+  });
+});
+
 export const ReservationController = {
   addReservation,
   getReservations,
+  deleteReservation,
 };

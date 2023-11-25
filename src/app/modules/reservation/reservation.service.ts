@@ -26,10 +26,10 @@ const addReservation = async (reservation: Reservation) => {
 
 const getReservations = async (params: IGetReservation) => {
   const { houseId, userId, authorId } = params;
-//   console.log(params);
+  //   console.log(params);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const query : any = {};
+  const query: any = {};
 
   if (houseId) {
     query.houseId = houseId;
@@ -51,13 +51,56 @@ const getReservations = async (params: IGetReservation) => {
     orderBy: {
       createdAt: 'desc',
     },
-  })
-//   console.log(reservations, 'reservations');
+  });
+  //   console.log(reservations, 'reservations');
 
   return reservations;
+};
+
+const deleteReservation = async (userId: string, reservationId: string) => {
+  if (
+    !userId ||
+    !reservationId ||
+    typeof userId !== 'string' ||
+    typeof reservationId !== 'string'
+  ) {
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      'Missing required fields: userId, reservationId'
+    );
+  }
+
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const reservation = await prisma.reservation.deleteMany({
+    where: {
+      id: reservationId,
+      OR: [
+        {
+          userId: userId,
+        },
+        {
+          house: {
+            userId: userId,
+          },
+        },
+      ],
+    },
+  });
+
+  return reservation;
 };
 
 export const ReservationService = {
   addReservation,
   getReservations,
+  deleteReservation,
 };
