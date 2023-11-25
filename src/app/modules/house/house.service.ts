@@ -94,7 +94,7 @@ const getHouseById = async (id: string): Promise<House> => {
     },
     include: {
       user: true,
-    }
+    },
   });
 
   if (!house) {
@@ -102,7 +102,7 @@ const getHouseById = async (id: string): Promise<House> => {
   }
 
   return house;
-}
+};
 
 const addFavorite = async (userId: string, houseId: string) => {
   const user = await prisma.user.findUnique({
@@ -168,10 +168,33 @@ const deleteFavorite = async (userId: string, houseId: string) => {
   return result;
 };
 
+const getFavoriteHouses = async (userId: string) => {
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const result = await prisma.house.findMany({
+    where: {
+      id: {
+        in: [...(isUserExist.favoriteIds || [])],
+      },
+    },
+  });
+
+  return result;
+};
+
 export const HouseService = {
   addHouse,
   getHouses,
   addFavorite,
   deleteFavorite,
   getHouseById,
+  getFavoriteHouses,
 };

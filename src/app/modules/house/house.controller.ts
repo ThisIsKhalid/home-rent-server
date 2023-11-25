@@ -67,10 +67,24 @@ const deleteFavorite = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getFavoriteHouses = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params.userId;
+
+  const result = await HouseService.getFavoriteHouses(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Favorite houses fetched successfully',
+    data: result,
+  });
+});
+
 export const HouseController = {
   addHouse,
   getHouses,
   addFavorite,
   deleteFavorite,
   getHouseById,
+  getFavoriteHouses,
 };

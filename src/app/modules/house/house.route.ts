@@ -7,6 +7,8 @@ router.post('/add-house', HouseController.addHouse);
 
 router.post('/favorites/:userId/:houseId', HouseController.addFavorite);
 
+router.get('/favorites/:userId', HouseController.getFavoriteHouses);
+
 router.delete('/favorites/:userId/:houseId', HouseController.deleteFavorite);
 
 router.get('/:houseId', HouseController.getHouseById);
