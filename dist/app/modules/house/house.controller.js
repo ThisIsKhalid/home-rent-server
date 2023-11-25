@@ -26,9 +26,30 @@ const addHouse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 
         data: result,
     });
 }));
+const deleteHouse = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const houseId = req.params.houseId;
+    const result = yield house_service_1.HouseService.deleteHouse(userId, houseId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'House deleted successfully',
+        data: result,
+    });
+}));
 const getHouses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const params = req.query;
     const result = yield house_service_1.HouseService.getHouses(params);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'House fetched successfully',
+        data: result,
+    });
+}));
+const getHouseById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const houseId = req.params.houseId;
+    const result = yield house_service_1.HouseService.getHouseById(houseId);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -58,9 +79,22 @@ const deleteFavorite = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
+const getFavoriteHouses = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    const result = yield house_service_1.HouseService.getFavoriteHouses(userId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Favorite houses fetched successfully',
+        data: result,
+    });
+}));
 exports.HouseController = {
     addHouse,
     getHouses,
     addFavorite,
     deleteFavorite,
+    getHouseById,
+    getFavoriteHouses,
+    deleteHouse,
 };

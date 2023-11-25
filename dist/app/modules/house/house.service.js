@@ -22,6 +22,27 @@ const addHouse = (house) => __awaiter(void 0, void 0, void 0, function* () {
     });
     return result;
 });
+const deleteHouse = (userId, houseId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (!user) {
+        throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'You are not authorized to delete this house ');
+    }
+    if (!houseId || typeof houseId !== 'string') {
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Invalid house id');
+    }
+    const result = yield prisma_1.default.house.deleteMany({
+        where: {
+            id: houseId,
+            userId,
+        },
+    });
+    // console.log(result);
+    return result;
+});
 const getHouses = (params) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, roomCount, guestCount, bathroomCount, locationValue, startDate, endDate, category, } = params;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -77,6 +98,20 @@ const getHouses = (params) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(houses);
     return houses;
 });
+const getHouseById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const house = yield prisma_1.default.house.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            user: true,
+        },
+    });
+    if (!house) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'House not found');
+    }
+    return house;
+});
 const addFavorite = (userId, houseId) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield prisma_1.default.user.findUnique({
         where: {
@@ -127,9 +162,30 @@ const deleteFavorite = (userId, houseId) => __awaiter(void 0, void 0, void 0, fu
     // console.log(result);
     return result;
 });
+const getFavoriteHouses = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUserExist = yield prisma_1.default.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+    if (!isUserExist) {
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'User not found');
+    }
+    const result = yield prisma_1.default.house.findMany({
+        where: {
+            id: {
+                in: [...(isUserExist.favoriteIds || [])],
+            },
+        },
+    });
+    return result;
+});
 exports.HouseService = {
     addHouse,
     getHouses,
     addFavorite,
     deleteFavorite,
+    getHouseById,
+    getFavoriteHouses,
+    deleteHouse,
 };
