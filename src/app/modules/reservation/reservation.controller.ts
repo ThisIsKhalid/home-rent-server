@@ -15,6 +15,19 @@ const addReservation = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getReservations = catchAsync(async (req: Request, res: Response) => {
+
+  const result = await ReservationService.getReservations(req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reservations fetched successfully',
+    data: result,
+  });
+});
+
 export const ReservationController = {
   addReservation,
+  getReservations,
 };
