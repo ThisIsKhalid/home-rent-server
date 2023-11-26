@@ -20,8 +20,8 @@ What things you need to install the software and how to install them:
 A step by step series of examples that tell you how to get a development environment running:
 
 1. Clone the repository
-2. Install the dependencies using `npm install`
-3. Run the development server using `npm run dev`
+2. Install the dependencies using `yarn install`
+3. Run the development server using `yarn dev`
 
 ## Running the tests
 
